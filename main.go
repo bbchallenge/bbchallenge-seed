@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
+	"time"
 )
 
 const DEBUG = 1
@@ -29,9 +30,12 @@ func printTM(tm TM) {
 	fmt.Println()
 }
 
+var start time.Time
+
 // Invariant: tm's transition (state, read) is not defined
 func search(tm TM, state byte, read byte,
-	previous_steps_count int, previous_space_count int) {
+	previous_steps_count int, previous_space_count int,
+	slow_down_init int, slow_down int) {
 
 	// mutexMetrics.Lock()
 	// printTM(tm)
@@ -103,12 +107,19 @@ func search(tm TM, state byte, read byte,
 
 					localMaxNbSteps = MaxI(localMaxNbSteps, steps_count)
 					localMaxSpace = MaxI(localMaxSpace, space_count)
-					wg.Add(1)
 
-					go func() {
-						search(newTm, after_state, after_read, steps_count, space_count)
-						wg.Done()
-					}()
+					if slow_down == 0 {
+						wg.Add(1)
+
+						go func() {
+							search(newTm, after_state, after_read, steps_count, space_count, slow_down_init, slow_down_init)
+							wg.Done()
+						}()
+					} else {
+						search(newTm, after_state, after_read, steps_count, space_count,
+							slow_down_init, slow_down-1)
+					}
+
 				}
 
 			}
@@ -124,11 +135,13 @@ func search(tm TM, state byte, read byte,
 	maxNbSteps = MaxI(localMaxNbSteps, maxNbSteps)
 	maxSpace = MaxI(localMaxSpace, maxSpace)
 	maxNbGoRoutines = MaxI(maxNbGoRoutines, runtime.NumGoroutine())
+	fmt.Println(nbMachineSeen, maxNbSteps, maxSpace, maxNbGoRoutines, time.Since(start), float64(nbMachineSeen)/time.Since(start).Seconds())
 	mutexMetrics.Unlock()
 
 }
 
 func main() {
+	start = time.Now()
 
 	// +---+-----+-----+
 	// | - |  0  |  1  |
@@ -162,7 +175,7 @@ func main() {
 
 	nbStates = 5
 
-	search(kick_start, 2, 0, 1, 1)
+	search(kick_start, 2, 0, 1, 1, 2, 2)
 
 	fmt.Println(nbMachineSeen, maxNbSteps, maxSpace)
 	fmt.Println("Max Go Routines:", maxNbGoRoutines)
