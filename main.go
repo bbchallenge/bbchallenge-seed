@@ -16,8 +16,9 @@ var start time.Time
 
 func main() {
 	arg_nbStates := flag.Int("n", 4, "# of states")
-	arg_backend := flag.Int("b", 0, "simulation backend")
-	arg_verb := flag.Int("v", 0, "verbosity level")
+	arg_backend := flag.Int("b", 0, "simulation backend (0 for go, 1 for C)")
+	arg_verb := flag.Int("v", 0, "verbosity level (0 for no logs, 1 for final report and 2 for intermediate reports)")
+
 	flag.Parse()
 
 	start = time.Now()
