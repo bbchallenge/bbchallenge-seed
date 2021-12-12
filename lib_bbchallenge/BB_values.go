@@ -1,4 +1,4 @@
-package main
+package bbchallenge
 
 // Source: https://webusers.imj-prg.fr/~pascal.michel/bbc.html
 

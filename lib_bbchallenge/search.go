@@ -1,4 +1,4 @@
-package main
+package bbchallenge
 
 import (
 	"fmt"
@@ -14,14 +14,17 @@ const (
 	SIMULATION_C
 )
 
+var VERBOSITY int
+var TimeStart time.Time
+
 var mutexMetrics sync.Mutex
-var nbMachineSeen int
-var maxNbSteps int
-var maxSpace int
-var maxNbGoRoutines int
+var NbMachineSeen int
+var MaxNbSteps int
+var MaxSpace int
+var MaxNbGoRoutines int
 
 // Invariant: tm's transition (state, read) is not defined
-func search(tm TM, state byte, read byte,
+func Search(nbStates byte, tm TM, state byte, read byte,
 	previous_steps_count int, previous_space_count int,
 	slow_down_init int, slow_down int, simulation_backend SimulationBackend) {
 
@@ -113,12 +116,12 @@ func search(tm TM, state byte, read byte,
 						wg.Add(1)
 
 						go func() {
-							search(newTm, after_state, after_read, steps_count, space_count,
+							Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
 								slow_down_init, slow_down_init, simulation_backend)
 							wg.Done()
 						}()
 					} else {
-						search(newTm, after_state, after_read, steps_count, space_count,
+						Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
 							slow_down_init, slow_down-1, simulation_backend)
 					}
 
@@ -132,14 +135,14 @@ func search(tm TM, state byte, read byte,
 	wg.Wait()
 
 	mutexMetrics.Lock()
-	nbMachineSeen += localNbMachineSeen
+	NbMachineSeen += localNbMachineSeen
 
-	maxNbSteps = MaxI(localMaxNbSteps, maxNbSteps)
-	maxSpace = MaxI(localMaxSpace, maxSpace)
-	maxNbGoRoutines = MaxI(maxNbGoRoutines, runtime.NumGoroutine())
+	MaxNbSteps = MaxI(localMaxNbSteps, MaxNbSteps)
+	MaxSpace = MaxI(localMaxSpace, MaxSpace)
+	MaxNbGoRoutines = MaxI(MaxNbGoRoutines, runtime.NumGoroutine())
 
 	if VERBOSITY >= 2 {
-		fmt.Println(nbMachineSeen, maxNbSteps, maxSpace, maxNbGoRoutines, time.Since(start), float64(nbMachineSeen)/time.Since(start).Seconds())
+		fmt.Println(NbMachineSeen, MaxNbSteps, MaxSpace, MaxNbGoRoutines, time.Since(TimeStart), float64(NbMachineSeen)/time.Since(TimeStart).Seconds())
 	}
 	mutexMetrics.Unlock()
 

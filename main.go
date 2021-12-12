@@ -4,13 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"time"
+
+	bbc "github.com/bbchallenge/bbchallenge/lib_bbchallenge"
 )
 
 const DEBUG = 1
-
-var VERBOSITY int
-
-var nbStates byte
 
 var start time.Time
 
@@ -21,29 +19,29 @@ func main() {
 
 	flag.Parse()
 
-	start = time.Now()
+	bbc.TimeStart = time.Now()
 
 	// Initial transition is 1RB (w.l.o.g)
-	kick_start := TM{
-		1, R, 2, 0, 0, 0,
+	kick_start := bbc.TM{
+		1, bbc.R, 2, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 		0, 0, 0, 0, 0, 0,
 	}
 
-	nbStates = byte(*arg_nbStates)
-	simulationBackend := SimulationBackend(*arg_backend)
-	VERBOSITY = *arg_verb
+	nbStates := byte(*arg_nbStates)
+	simulationBackend := bbc.SimulationBackend(*arg_backend)
+	bbc.VERBOSITY = *arg_verb
 
-	search(kick_start, 2, 0, 1, 1, 2, 2, simulationBackend)
+	bbc.Search(nbStates, kick_start, 2, 0, 1, 1, 2, 2, simulationBackend)
 
-	if VERBOSITY >= 1 {
+	if bbc.VERBOSITY >= 1 {
 		fmt.Println("Report")
 		fmt.Println("======")
-		fmt.Printf("Number of %d-state machines seen: %d\n", nbStates, nbMachineSeen)
-		fmt.Printf("BB%d estimate: %d\n", nbStates, maxNbSteps)
-		fmt.Printf("BB%d_SPACE estimate: %d\n", nbStates, maxSpace)
-		fmt.Println("Max # of simultaneous Go routines during search:", maxNbGoRoutines)
+		fmt.Printf("Number of %d-state machines seen: %d\n", nbStates, bbc.NbMachineSeen)
+		fmt.Printf("BB%d estimate: %d\n", nbStates, bbc.MaxNbSteps)
+		fmt.Printf("BB%d_SPACE estimate: %d\n", nbStates, bbc.MaxSpace)
+		fmt.Println("Max # of simultaneous Go routines during search:", bbc.MaxNbGoRoutines)
 	}
 }

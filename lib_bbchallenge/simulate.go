@@ -1,4 +1,4 @@
-package main
+package bbchallenge
 
 // #cgo CFLAGS: -g -Wall -O3
 // #include "simulate.h"
@@ -161,7 +161,7 @@ func simulate_C_wrapper(tm TM) (HaltStatus, byte, byte, int, int) {
 }
 
 // Useful for debugging
-func printTM(tm TM) {
+func printTM(nbStates byte, tm TM) {
 	for i := 0; i < int(nbStates); i += 1 {
 		for j := 0; j <= 1; j += 1 {
 			fmt.Printf("%d%d%d ", tm[6*i+3*j], tm[6*i+3*j+1], tm[6*i+3*j+2])
