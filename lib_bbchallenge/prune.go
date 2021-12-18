@@ -101,6 +101,10 @@ func pruneRedundantTransition(nbStates byte, tm TM, state byte, read byte) bool 
 		return false
 	}
 
+	if tm[6*(goto_-1)+3*0+2] != tm[6*(goto_-1)+3*1+2] { // goto state is not coming back in same state
+		return false
+	}
+
 	return true
 
 }
