@@ -65,7 +65,7 @@ type TM [2 * MAX_STATES * 3]byte
 // - read (byte): Read symbol of undetermined transition if reached
 // - steps count
 // - space count
-func simulate(tm TM) (HaltStatus, byte, byte, int, int) {
+func simulate(tm TM, limitTime int, limitSpace int) (HaltStatus, byte, byte, int, int) {
 	var tape [MAX_MEMORY]byte
 
 	max_pos := 0
@@ -99,11 +99,11 @@ func simulate(tm TM) (HaltStatus, byte, byte, int, int) {
 				steps_count, max_pos - min_pos + 1
 		}
 
-		if nbStateSeen == 5 && steps_count > BB5 {
+		if nbStateSeen == 5 && steps_count > limitTime {
 			return DUNNO_TIME, 0, 0, steps_count, max_pos - min_pos + 1
 		}
 
-		if nbStateSeen == 5 && max_pos-min_pos+1 > BB5_SPACE {
+		if nbStateSeen == 5 && max_pos-min_pos+1 > limitSpace {
 			return DUNNO_SPACE, 0, 0, steps_count, max_pos - min_pos + 1
 		}
 
@@ -149,13 +149,13 @@ func simulate(tm TM) (HaltStatus, byte, byte, int, int) {
 }
 
 // Wrapper for the C simulation code in order to have same API as Go code
-func simulate_C_wrapper(tm TM) (HaltStatus, byte, byte, int, int) {
+func simulate_C_wrapper(tm TM, limitTime int, limitSpace int) (HaltStatus, byte, byte, int, int) {
 	end_state := C.uchar(0)
 	read := C.uchar(0)
 	steps_count := C.int(0)
 	space_count := C.int(0)
 
-	halt_status := C.simulate((*C.uchar)(&tm[0]), &end_state, &read, &steps_count, &space_count)
+	halt_status := C.simulate((*C.uchar)(&tm[0]), C.int(limitTime), C.int(limitSpace), &end_state, &read, &steps_count, &space_count)
 
 	return HaltStatus(halt_status), byte(end_state), byte(read), int(steps_count), int(space_count)
 }

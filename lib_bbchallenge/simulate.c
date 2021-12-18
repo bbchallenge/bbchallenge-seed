@@ -31,6 +31,8 @@ const BYTE DUNNO_TIME = 2;
 const BYTE DUNNO_SPACE = 3;
 
 BYTE simulate(BYTE* tm,
+              int limit_time,
+              int limit_space,
               BYTE* ret_state,
               BYTE* ret_read,
               int* ret_steps_count,
@@ -63,11 +65,11 @@ BYTE simulate(BYTE* tm,
       RETURN(NO_HALT, 0, 0, steps_count, max_pos - min_pos + 1)
     }
 
-    if (nbStateSeen == 5 && steps_count > BB5) {
+    if (nbStateSeen == 5 && steps_count > limit_time) {
       RETURN(DUNNO_TIME, 0, 0, steps_count, max_pos - min_pos + 1)
     }
 
-    if (nbStateSeen == 5 && max_pos - min_pos + 1 > BB5_SPACE) {
+    if (nbStateSeen == 5 && max_pos - min_pos + 1 > limit_space) {
       RETURN(DUNNO_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
     }
 

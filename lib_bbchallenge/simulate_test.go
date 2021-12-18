@@ -29,7 +29,7 @@ func TestBackendGo(t *testing.T) {
 	start := time.Now()
 	bb5_winner := getBB5Winner()
 
-	halt_status, end_state, read, steps_count, space_count := simulate(bb5_winner)
+	halt_status, end_state, read, steps_count, space_count := simulate(bb5_winner, BB5, BB5_SPACE)
 
 	if halt_status != HALT || end_state != H || read != 0 || steps_count != BB5 || space_count != BB5_SPACE {
 		t.Error(halt_status, end_state, read, steps_count, space_count)
@@ -41,7 +41,7 @@ func TestBackendGo(t *testing.T) {
 func TestBackendC(t *testing.T) {
 	start := time.Now()
 	bb5_winner := getBB5Winner()
-	halt_status, end_state, read, steps_count, space_count := simulate_C_wrapper(bb5_winner)
+	halt_status, end_state, read, steps_count, space_count := simulate_C_wrapper(bb5_winner, BB5, BB5_SPACE)
 
 	if halt_status != HALT || end_state != H || read != 0 || steps_count != BB5 || space_count != BB5_SPACE {
 		t.Error(halt_status, end_state, read, steps_count, space_count)

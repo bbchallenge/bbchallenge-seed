@@ -2,6 +2,7 @@ package bbchallenge
 
 import (
 	"fmt"
+	"io"
 	"runtime"
 	"sync"
 	"time"
@@ -14,11 +15,24 @@ const (
 	SIMULATION_C
 )
 
-var VERBOSITY int
+var DunnoTimeLog io.Writer
+var DunnoSpaceLog io.Writer
+
+var VERBOSE bool
+var LOG_FREQ int64 = 30000000000
 var TimeStart time.Time
+var lastLogTime time.Time
+var notFirstLog bool
+
+var LIMIT_TIME int = BB5
+var LIMIT_SPACE int = BB5_SPACE
 
 var mutexMetrics sync.Mutex
 var NbMachineSeen int
+var NbHaltingMachines int
+var NbNonHaltingMachines int
+var NbDunnoTime int
+var NbDunnoSpace int
 var MaxNbSteps int
 var MaxSpace int
 var MaxNbGoRoutines int
@@ -64,6 +78,10 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	var target_state byte
 
 	var localNbMachineSeen int
+	var localNbHalt int
+	var localNbNoHalt int
+	var localNbDunnoTime int
+	var localNbDunnoSpace int
 	var localMaxNbSteps int
 	var localMaxSpace int
 
@@ -93,24 +111,18 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 
 				switch simulation_backend {
 				case SIMULATION_GO:
-					haltStatus, after_state, after_read, steps_count, space_count = simulate(newTm)
+					haltStatus, after_state, after_read, steps_count, space_count = simulate(newTm, LIMIT_TIME, LIMIT_SPACE)
 					break
 				case SIMULATION_C:
-					haltStatus, after_state, after_read, steps_count, space_count = simulate_C_wrapper(newTm)
+					haltStatus, after_state, after_read, steps_count, space_count = simulate_C_wrapper(newTm, LIMIT_TIME, LIMIT_SPACE)
 					break
 				}
 
-				if haltStatus == HALT {
-
-					// mutexMetrics.Lock()
-					// if steps_count >= maxNbSteps {
-					// 	fmt.Println(steps_count)
-					// 	printTM(newTm)
-					// }
-					// mutexMetrics.Unlock()
-
+				switch haltStatus {
+				case HALT:
 					localMaxNbSteps = MaxI(localMaxNbSteps, steps_count)
 					localMaxSpace = MaxI(localMaxSpace, space_count)
+					localNbHalt += 1
 
 					if slow_down == 0 {
 						wg.Add(1)
@@ -124,9 +136,22 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 						Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
 							slow_down_init, slow_down-1, simulation_backend)
 					}
+					break
 
+				case NO_HALT:
+					localNbNoHalt += 1
+					break
+
+				case DUNNO_TIME:
+					localNbDunnoTime += 1
+					DunnoTimeLog.Write(tm[:])
+					break
+
+				case DUNNO_SPACE:
+					localNbDunnoSpace += 1
+					DunnoSpaceLog.Write(tm[:])
+					break
 				}
-
 			}
 
 		}
@@ -137,13 +162,30 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	mutexMetrics.Lock()
 	NbMachineSeen += localNbMachineSeen
 
+	NbHaltingMachines += localNbHalt
+	NbNonHaltingMachines += localNbNoHalt
+	NbDunnoTime += localNbDunnoTime
+	NbDunnoSpace += localNbDunnoSpace
+
 	MaxNbSteps = MaxI(localMaxNbSteps, MaxNbSteps)
 	MaxSpace = MaxI(localMaxSpace, MaxSpace)
 	MaxNbGoRoutines = MaxI(MaxNbGoRoutines, runtime.NumGoroutine())
 
-	if VERBOSITY >= 2 {
-		fmt.Println(NbMachineSeen, MaxNbSteps, MaxSpace, MaxNbGoRoutines, time.Since(TimeStart), float64(NbMachineSeen)/time.Since(TimeStart).Seconds())
+	if VERBOSE && (!notFirstLog || time.Since(lastLogTime) >= time.Duration(LOG_FREQ)) {
+		notFirstLog = true
+		lastLogTime = time.Now()
+		fmt.Printf("run time: %s\ntotal: %d\nhalt: %d (%.2f)\nnon halt: %d (%.2f)\ndunno time: %d (%.2f)\n"+
+			"dunno space: %d (%.2f)\nbb est.: %d\nbb space est.: %d\nrun/sec: %f\nmax go routines: %d\n\n",
+			time.Since(TimeStart), NbMachineSeen,
+			NbHaltingMachines, float64(NbHaltingMachines)/float64(NbMachineSeen),
+			NbNonHaltingMachines, float64(NbNonHaltingMachines)/float64(NbMachineSeen),
+			NbDunnoTime, float64(NbDunnoTime)/float64(NbMachineSeen),
+			NbDunnoSpace, float64(NbDunnoSpace)/float64(NbMachineSeen),
+			MaxNbSteps, MaxSpace, float64(NbMachineSeen)/time.Since(TimeStart).Seconds(),
+			MaxNbGoRoutines)
+
 	}
+
 	mutexMetrics.Unlock()
 
 }
