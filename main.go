@@ -74,6 +74,8 @@ func main() {
 
 	arg_task_divisor := flag.Int("divtask", 1, "divides the size of the job by 1, 2, 4 or 8")
 
+	arg_disable_filtering := flag.Bool("nf", false, "disable extra pruning of redundant machines from the enumeration")
+
 	if !(*arg_task_divisor == 1 || *arg_task_divisor == 2 || *arg_task_divisor == 4 || *arg_task_divisor == 8) {
 
 		fmt.Println("Task divisor must be either 1, 2, 4 or 8. Default is 1.")
@@ -112,6 +114,7 @@ func main() {
 	bbc.SimulationLimitTime = *arg_limit_time
 	bbc.SimulationLimitSpace = *arg_limit_space
 	bbc.SlowDownInit = 2
+	bbc.ActivateFiltering = !*arg_disable_filtering
 
 	bbc.TaskDivisor = *arg_task_divisor
 	bbc.TaskDivisorMe = *arg_task_divisor_me

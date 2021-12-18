@@ -27,6 +27,8 @@ var BBRecordLog io.Writer   // Logging BB and BB_space record holders
 var Verbose bool
 var LogFreq int64 = 30000000000 // 30 sec in ns
 
+var ActivateFiltering bool = true
+
 var SimulationLimitTime int = BB5
 var SimulationLimitSpace int = BB5_SPACE
 
@@ -130,7 +132,7 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 				newTm[(state-1)*6+read*3+1] = move
 				newTm[(state-1)*6+read*3+2] = target_state
 
-				if !filterTM(newTm) {
+				if !isRoot && ActivateFiltering && pruneTM(nbStates, newTm, state, read) {
 					continue
 				}
 
