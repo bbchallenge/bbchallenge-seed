@@ -31,6 +31,12 @@ var SimulationLimitSpace int = BB5_SPACE
 
 var SlowDownInit int = 2 // How many recursion will be done on the stack before calling go routines
 
+// At the root of the TM tree are always 12 machines (independently of nbStates)
+// Only 8 of them are interesting. We authorize the user to cut the computation
+// of the entire tree in 1, 2, 4, or 8 pieces. Useful when you have several computers!
+var TaskDivisor int = 1   // Can be either 1, 2, 4 or 8
+var TaskDivisorMe int = 0 // Wich task to I do
+
 // Package outputs
 
 var mutexMetrics sync.Mutex
@@ -60,6 +66,7 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	// taking all states up to the first completely undefined
 	// As in http://turbotm.de/~heiner/BB/mabu90.html#Enumeration
 	var target_states [MAX_STATES]byte
+	var definedTransitionCount byte
 	var undefinedTransitionCount byte
 
 	for iState := 0; iState < int(nbStates); iState += 1 {
@@ -67,10 +74,14 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 
 		if tm[6*(iState)+3*0+2] == 0 {
 			undefinedTransitionCount += 1
+		} else {
+			definedTransitionCount += 1
 		}
 
 		if tm[6*(iState)+3*1+2] == 0 {
 			undefinedTransitionCount += 1
+		} else {
+			definedTransitionCount += 1
 		}
 
 		// The following allows to take the min of the completely undefined states
@@ -85,6 +96,8 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 		return
 	}
 
+	isRoot := definedTransitionCount == 1
+
 	var target_state byte
 
 	var localNbMachineSeen int
@@ -96,6 +109,8 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	var localBestTimeHaltingMachine TM
 	var localBestSpaceHaltingMachine TM
 	var localMaxSpace int
+
+	var loopIndex int
 
 	var wg sync.WaitGroup
 	for _, target_state = range target_states {
@@ -132,6 +147,18 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 
 				switch haltStatus {
 				case HALT:
+
+					// Task Divisor
+					if isRoot {
+
+						if loopIndex/(8/TaskDivisor) != TaskDivisorMe {
+							loopIndex += 1
+							continue
+						} else {
+							loopIndex += 1
+						}
+					}
+
 					if steps_count > localMaxNbSteps {
 						localBestTimeHaltingMachine = newTm
 					}

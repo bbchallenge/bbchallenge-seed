@@ -69,8 +69,23 @@ func main() {
 	arg_verb := flag.Bool("v", false, "displays infos about the run every 5m on stdout")
 	arg_verb_freq := flag.Int("vf", 30, "seconds between each stdout log in verbose mode")
 
-	arg_limit_time := flag.Int("lt", bbc.BB5, "Time limit after which running machines are killed and marked as 'DUNNO_TIME' (known values of Busy Beaver are also used for early termination)")
-	arg_limit_space := flag.Int("ls", bbc.BB5_SPACE, "Space limit after which machines are killed and marked as 'DUNNO_SPACE' (known values of Busy Beaver space are also used for early termination)")
+	arg_limit_time := flag.Int("tlim", bbc.BB5, "time limit after which running machines are killed and marked as 'DUNNO_TIME' (known values of Busy Beaver are also used for early termination)")
+	arg_limit_space := flag.Int("slim", bbc.BB5_SPACE, "space limit after which machines are killed and marked as 'DUNNO_SPACE' (known values of Busy Beaver space are also used for early termination)")
+
+	arg_task_divisor := flag.Int("divtask", 1, "divides the size of the job by 1, 2, 4 or 8")
+
+	if !(*arg_task_divisor == 1 || *arg_task_divisor == 2 || *arg_task_divisor == 4 || *arg_task_divisor == 8) {
+
+		fmt.Println("Task divisor must be either 1, 2, 4 or 8. Default is 1.")
+		os.Exit(-1)
+	}
+
+	arg_task_divisor_me := flag.Int("mytask", 0, "select which task bucket this run will do")
+
+	if *arg_task_divisor_me < 0 || *arg_task_divisor_me >= *arg_task_divisor {
+		fmt.Println("Your task id must be either >= 0 and < the task divisor which is", *arg_task_divisor)
+		os.Exit(-1)
+	}
 
 	flag.Parse()
 
@@ -91,12 +106,17 @@ func main() {
 	log.Info(runName)
 	log.Info(time.Now().Format(time.RFC1123))
 	log.Info("Nb states: ", nbStates)
+	log.Info("Task divisor: ", bbc.TaskDivisor)
+	log.Info("My task: ", bbc.TaskDivisorMe)
 
 	bbc.Verbose = *arg_verb
 	bbc.LogFreq = int64(*arg_verb_freq) * 1e9
 	bbc.SimulationLimitTime = *arg_limit_time
 	bbc.SimulationLimitSpace = *arg_limit_space
 	bbc.SlowDownInit = 2
+
+	bbc.TaskDivisor = *arg_task_divisor
+	bbc.TaskDivisorMe = *arg_task_divisor_me
 
 	log.Info("Limit time: ", bbc.SimulationLimitTime)
 	log.Info("Limit space: ", bbc.SimulationLimitSpace)
