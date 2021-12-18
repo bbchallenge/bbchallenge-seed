@@ -44,6 +44,7 @@ var TaskDivisorMe int = 0 // Wich task to I do
 
 var mutexMetrics sync.Mutex
 var NbMachineSeen int
+var NbMachinePruned int
 var NbHaltingMachines int
 var NbNonHaltingMachines int
 var NbDunnoTime int
@@ -104,6 +105,7 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	var target_state byte
 
 	var localNbMachineSeen int
+	var localNbMachinePruned int
 	var localNbHalt int
 	var localNbNoHalt int
 	var localNbDunnoTime int
@@ -133,6 +135,7 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 				newTm[(state-1)*6+read*3+2] = target_state
 
 				if !isRoot && ActivateFiltering && pruneTM(nbStates, newTm, state, read) {
+					localNbMachinePruned += 1
 					continue
 				}
 
@@ -216,7 +219,7 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 
 	mutexMetrics.Lock()
 	NbMachineSeen += localNbMachineSeen
-
+	NbMachinePruned += localNbMachinePruned
 	NbHaltingMachines += localNbHalt
 	NbNonHaltingMachines += localNbNoHalt
 	NbDunnoTime += localNbDunnoTime
@@ -239,9 +242,10 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	if Verbose && (!notFirstLog || time.Since(lastLogTime) >= time.Duration(LogFreq)) {
 		notFirstLog = true
 		lastLogTime = time.Now()
-		fmt.Printf("run time: %s\ntotal: %d\nhalt: %d (%.2f)\nnon halt: %d (%.2f)\ndunno time: %d (%.2f)\n"+
+		fmt.Printf("run time: %s\ntotal: %d\npruned: %d (%.2f)\nhalt: %d (%.2f)\nnon halt: %d (%.2f)\ndunno time: %d (%.2f)\n"+
 			"dunno space: %d (%.2f)\nbb est.: %d\nbb space est.: %d\nrun/sec: %f\nmax go routines: %d\n\n",
 			time.Since(TimeStart), NbMachineSeen,
+			NbMachinePruned, float64(NbMachinePruned)/float64(NbMachineSeen),
 			NbHaltingMachines, float64(NbHaltingMachines)/float64(NbMachineSeen),
 			NbNonHaltingMachines, float64(NbNonHaltingMachines)/float64(NbMachineSeen),
 			NbDunnoTime, float64(NbDunnoTime)/float64(NbMachineSeen),

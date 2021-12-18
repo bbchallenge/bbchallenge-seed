@@ -3,7 +3,8 @@ package bbchallenge
 
 func pruneTM(nbStates byte, tm TM, state byte, read byte) bool {
 	// Returns true if the machine should be ditched
-	return pruneEquivalentStates(nbStates, tm, state)
+	return pruneEquivalentStates(nbStates, tm, state) ||
+		pruneRedundantTransition(nbStates, tm, state, read)
 }
 
 func areStatesEquivalent(tm TM, state1 byte, state2 byte) bool {
@@ -75,4 +76,31 @@ func pruneEquivalentStates(nbStates byte, tm TM, state byte) bool {
 	}
 
 	return false
+}
+
+func pruneRedundantTransition(nbStates byte, tm TM, state byte, read byte) bool {
+	// Quote from http://turbotm.de/~heiner/BB/mabu90.html#Enumeration:
+	// "If a sequence of three transitions is guaranteed to have the same effect
+	// as a single transition, only one of both constructions need be inspected.
+	// Example: Let x,y,z and s be states with x!=y, a, b, and c arbitrary symbols,
+	//          and D from {L,R}, then (x,0)->(y,0,L), (x,1)->(y,1,L), and (y,b)->(z,c,D)
+	//          implies that (s,a)->(x,b,R) and (s,a)->(z,c,D) have the same effect."
+
+	move := tm[6*(state-1)+3*read+1]
+	goto_ := tm[6*(state-1)+3*read+2]
+
+	if tm[6*(goto_-1)+3*0+2] == 0 || tm[6*(goto_-1)+3*1+2] == 0 { // goto state is not fully defined
+		return false
+	}
+
+	if tm[6*(goto_-1)+3*0] != 0 || tm[6*(goto_-1)+3*1] != 1 { // goto state is not copying
+		return false
+	}
+
+	if tm[6*(goto_-1)+3*0+1] != (1-move) || tm[6*(goto_-1)+3*1+1] != (1-move) { // goto state is not coming back
+		return false
+	}
+
+	return true
+
 }

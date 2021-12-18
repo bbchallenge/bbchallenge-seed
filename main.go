@@ -138,6 +138,7 @@ func main() {
 
 	log.Info("Run time: ", time.Since(bbc.TimeStart), "\n")
 	log.Info(fmt.Sprintf("Number of %d-state machines seen: %d", nbStates, bbc.NbMachineSeen))
+	log.Info(fmt.Sprintf("Number of %d-state machines pruned: %d", nbStates, bbc.NbMachinePruned))
 	log.Info(fmt.Sprintf("Number of halting machines: %d", bbc.NbHaltingMachines))
 	log.Info(fmt.Sprintf("Number of non-halting machines: %d", bbc.NbNonHaltingMachines))
 	log.Info(fmt.Sprintf("Number of dunno-time machines: %d", bbc.NbDunnoTime))
