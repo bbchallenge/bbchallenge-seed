@@ -106,8 +106,6 @@ func main() {
 	log.Info(runName)
 	log.Info(time.Now().Format(time.RFC1123))
 	log.Info("Nb states: ", nbStates)
-	log.Info("Task divisor: ", bbc.TaskDivisor)
-	log.Info("My task: ", bbc.TaskDivisorMe)
 
 	bbc.Verbose = *arg_verb
 	bbc.LogFreq = int64(*arg_verb_freq) * 1e9
@@ -117,6 +115,9 @@ func main() {
 
 	bbc.TaskDivisor = *arg_task_divisor
 	bbc.TaskDivisorMe = *arg_task_divisor_me
+
+	log.Info("Task divisor: ", bbc.TaskDivisor)
+	log.Info("My task: ", bbc.TaskDivisorMe)
 
 	log.Info("Limit time: ", bbc.SimulationLimitTime)
 	log.Info("Limit space: ", bbc.SimulationLimitSpace)
