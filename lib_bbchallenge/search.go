@@ -15,17 +15,22 @@ const (
 	SIMULATION_C
 )
 
+// Package parameters
+
+var TimeStart time.Time = time.Now()
+
 var DunnoTimeLog io.Writer
 var DunnoSpaceLog io.Writer
 
-var VERBOSE bool
-var LOG_FREQ int64 = 30000000000
-var TimeStart time.Time
-var lastLogTime time.Time
-var notFirstLog bool
+var Verbose bool
+var LogFreq int64 = 30000000000 // 30 sec in ns
 
-var LIMIT_TIME int = BB5
-var LIMIT_SPACE int = BB5_SPACE
+var SimulationLimitTime int = BB5
+var SimulationLimitSpace int = BB5_SPACE
+
+var SlowDownInit int = 2 // How many recursion will be done on the stack before calling go routines
+
+// Package outputs
 
 var mutexMetrics sync.Mutex
 var NbMachineSeen int
@@ -37,10 +42,14 @@ var MaxNbSteps int
 var MaxSpace int
 var MaxNbGoRoutines int
 
+// Logging related internal variables
+var lastLogTime time.Time
+var notFirstLog bool
+
 // Invariant: tm's transition (state, read) is not defined
 func Search(nbStates byte, tm TM, state byte, read byte,
 	previous_steps_count int, previous_space_count int,
-	slow_down_init int, slow_down int, simulation_backend SimulationBackend) {
+	slow_down int, simulation_backend SimulationBackend) {
 
 	// mutexMetrics.Lock()
 	// printTM(tm)
@@ -111,10 +120,10 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 
 				switch simulation_backend {
 				case SIMULATION_GO:
-					haltStatus, after_state, after_read, steps_count, space_count = simulate(newTm, LIMIT_TIME, LIMIT_SPACE)
+					haltStatus, after_state, after_read, steps_count, space_count = simulate(newTm, SimulationLimitTime, SimulationLimitSpace)
 					break
 				case SIMULATION_C:
-					haltStatus, after_state, after_read, steps_count, space_count = simulate_C_wrapper(newTm, LIMIT_TIME, LIMIT_SPACE)
+					haltStatus, after_state, after_read, steps_count, space_count = simulate_C_wrapper(newTm, SimulationLimitTime, SimulationLimitSpace)
 					break
 				}
 
@@ -129,12 +138,12 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 
 						go func() {
 							Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
-								slow_down_init, slow_down_init, simulation_backend)
+								SlowDownInit, simulation_backend)
 							wg.Done()
 						}()
 					} else {
 						Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
-							slow_down_init, slow_down-1, simulation_backend)
+							slow_down-1, simulation_backend)
 					}
 					break
 
@@ -171,7 +180,7 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	MaxSpace = MaxI(localMaxSpace, MaxSpace)
 	MaxNbGoRoutines = MaxI(MaxNbGoRoutines, runtime.NumGoroutine())
 
-	if VERBOSE && (!notFirstLog || time.Since(lastLogTime) >= time.Duration(LOG_FREQ)) {
+	if Verbose && (!notFirstLog || time.Since(lastLogTime) >= time.Duration(LogFreq)) {
 		notFirstLog = true
 		lastLogTime = time.Now()
 		fmt.Printf("run time: %s\ntotal: %d\nhalt: %d (%.2f)\nnon halt: %d (%.2f)\ndunno time: %d (%.2f)\n"+
