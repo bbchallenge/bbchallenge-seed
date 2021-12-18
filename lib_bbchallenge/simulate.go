@@ -1,3 +1,4 @@
+// Here we simulate TMs in Go
 package bbchallenge
 
 // #cgo CFLAGS: -g -Wall -O3

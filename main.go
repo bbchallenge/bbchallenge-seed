@@ -128,7 +128,7 @@ func main() {
 		log.Info("Simulation backend: C")
 	}
 
-	bbc.Search(nbStates, kick_start, 2, 0, 1, 1, bbc.SlowDownInit, simulationBackend)
+	bbc.Enumerate(nbStates, kick_start, 2, 0, 1, 1, bbc.SlowDownInit, simulationBackend)
 
 	log.Infoln("\nReport")
 	log.Infoln("======")

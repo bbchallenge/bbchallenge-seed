@@ -1,3 +1,4 @@
+// Here we test our TMs simulation algorithms and various other things
 package bbchallenge
 
 import (

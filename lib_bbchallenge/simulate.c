@@ -1,3 +1,4 @@
+// Here we simulate TMs in C
 #include "simulate.h"
 
 #define MAX_MEMORY 40000

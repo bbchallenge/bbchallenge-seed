@@ -1,3 +1,4 @@
+// Here we define the TM enumeration algorithm
 package bbchallenge
 
 import (
@@ -54,7 +55,7 @@ var lastLogTime time.Time
 var notFirstLog bool
 
 // Invariant: tm's transition (state, read) is not defined
-func Search(nbStates byte, tm TM, state byte, read byte,
+func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	previous_steps_count int, previous_space_count int,
 	slow_down int, simulation_backend SimulationBackend) {
 
@@ -128,6 +129,11 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 				newTm[(state-1)*6+read*3] = write
 				newTm[(state-1)*6+read*3+1] = move
 				newTm[(state-1)*6+read*3+2] = target_state
+
+				if !filterTM(newTm) {
+					continue
+				}
+
 				localNbMachineSeen += 1
 
 				var haltStatus HaltStatus
@@ -175,12 +181,12 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 						wg.Add(1)
 
 						go func() {
-							Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
+							Enumerate(nbStates, newTm, after_state, after_read, steps_count, space_count,
 								SlowDownInit, simulation_backend)
 							wg.Done()
 						}()
 					} else {
-						Search(nbStates, newTm, after_state, after_read, steps_count, space_count,
+						Enumerate(nbStates, newTm, after_state, after_read, steps_count, space_count,
 							slow_down-1, simulation_backend)
 					}
 					break

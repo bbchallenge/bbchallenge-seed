@@ -1,3 +1,4 @@
+// Here we store known and conjectured BB values
 package bbchallenge
 
 // Source: https://webusers.imj-prg.fr/~pascal.michel/bbc.html
