@@ -91,13 +91,21 @@ func main() {
 	log.Info(runName)
 	log.Info(time.Now().Format(time.RFC1123))
 	log.Info("Nb states: ", nbStates)
-	log.Info("Simulation backend: ", simulationBackend)
 
 	bbc.Verbose = *arg_verb
 	bbc.LogFreq = int64(*arg_verb_freq) * 1e9
 	bbc.SimulationLimitTime = *arg_limit_time
 	bbc.SimulationLimitSpace = *arg_limit_space
 	bbc.SlowDownInit = 2
+
+	log.Info("Limit time: ", bbc.SimulationLimitTime)
+	log.Info("Limit space: ", bbc.SimulationLimitSpace)
+
+	if simulationBackend == bbc.SIMULATION_GO {
+		log.Info("Simulation backend: GO")
+	} else {
+		log.Info("Simulation backend: C")
+	}
 
 	bbc.Search(nbStates, kick_start, 2, 0, 1, 1, bbc.SlowDownInit, simulationBackend)
 
