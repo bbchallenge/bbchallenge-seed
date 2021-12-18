@@ -25,6 +25,21 @@ func getBB5Winner() TM {
 
 }
 
+func TestTabulateTM(t *testing.T) {
+
+	bb5_winner := getBB5Winner()
+	t.Log("\n" + bb5_winner.ToAsciiTable(5))
+
+	notFullyDefinedTM := TM{
+		1, R, 2, 1, L, 3,
+		1, R, 3, 1, R, 2,
+		1, R, 4, 0, L, 5,
+		1, L, 1, 1, L, 4,
+		0, 0, 0, 0, 0, 0}
+
+	t.Log("\n" + notFullyDefinedTM.ToAsciiTable(5))
+}
+
 func TestBackendGo(t *testing.T) {
 	start := time.Now()
 	bb5_winner := getBB5Winner()

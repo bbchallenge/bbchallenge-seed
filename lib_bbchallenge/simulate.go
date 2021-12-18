@@ -3,7 +3,12 @@ package bbchallenge
 // #cgo CFLAGS: -g -Wall -O3
 // #include "simulate.h"
 import "C"
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+
+	tabulate "github.com/rgeoghegan/tabulate"
+)
 
 // We currently work with machines that have at most MAX_STATES states
 const MAX_STATES = 5
@@ -56,6 +61,44 @@ func MinI(a int, b int) int {
 // 1, R, B, 1, R, H, 1, L, B, 0, R, C, 1, L, C, 1, L, A, -, -, -, 1, R, A
 
 type TM [2 * MAX_STATES * 3]byte
+
+func tmTransitionToStr(b1 byte, b2 byte, b3 byte) (toRet string) {
+
+	if b3 == 0 {
+		return "???"
+	}
+
+	toRet = strconv.Itoa(int(b1))
+
+	if b2 == 0 {
+		toRet += "R"
+	} else {
+		toRet += "L"
+	}
+
+	toRet += string(rune(int('A') + int(b3) - 1))
+
+	return toRet
+}
+
+func (tm TM) ToAsciiTable(nbStates byte) (toRet string) {
+
+	var table [][]string
+
+	for i := byte(0); i < nbStates; i += 1 {
+
+		table = append(table, []string{string(rune(int('A') + int(i))),
+			tmTransitionToStr(tm[6*i], tm[6*i+1], tm[6*i+2]),
+			tmTransitionToStr(tm[6*i+3], tm[6*i+4], tm[6*i+5])})
+	}
+
+	layout := &tabulate.Layout{Headers: []string{"-", "0", "1"}, Format: tabulate.SimpleFormat}
+	asText, _ := tabulate.Tabulate(
+		table, layout,
+	)
+
+	return asText
+}
 
 // Simulates the input TM from blank input
 // and state 1.

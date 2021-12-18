@@ -19,8 +19,9 @@ const (
 
 var TimeStart time.Time = time.Now()
 
-var DunnoTimeLog io.Writer
-var DunnoSpaceLog io.Writer
+var DunnoTimeLog io.Writer  // Logging DUNNO_TIME machines
+var DunnoSpaceLog io.Writer // Logging DUNNO_SPACE machines
+var BBRecordLog io.Writer   // Logging BB and BB_space record holders
 
 var Verbose bool
 var LogFreq int64 = 30000000000 // 30 sec in ns
@@ -92,6 +93,8 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	var localNbDunnoTime int
 	var localNbDunnoSpace int
 	var localMaxNbSteps int
+	var localBestTimeHaltingMachine TM
+	var localBestSpaceHaltingMachine TM
 	var localMaxSpace int
 
 	var wg sync.WaitGroup
@@ -129,6 +132,14 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 
 				switch haltStatus {
 				case HALT:
+					if steps_count > localMaxNbSteps {
+						localBestTimeHaltingMachine = newTm
+					}
+
+					if space_count > localMaxSpace {
+						localBestSpaceHaltingMachine = newTm
+					}
+
 					localMaxNbSteps = MaxI(localMaxNbSteps, steps_count)
 					localMaxSpace = MaxI(localMaxSpace, space_count)
 					localNbHalt += 1
@@ -175,6 +186,16 @@ func Search(nbStates byte, tm TM, state byte, read byte,
 	NbNonHaltingMachines += localNbNoHalt
 	NbDunnoTime += localNbDunnoTime
 	NbDunnoSpace += localNbDunnoSpace
+
+	if localMaxNbSteps > MaxNbSteps {
+		BBRecordLog.Write([]byte(fmt.Sprintf("*TIME %d SPACE %d\n%s\n",
+			localMaxNbSteps, localMaxSpace,
+			localBestTimeHaltingMachine.ToAsciiTable(nbStates))))
+	} else if localMaxSpace > MaxSpace {
+		BBRecordLog.Write([]byte(fmt.Sprintf("TIME %d *SPACE %d\n%s\n",
+			localMaxNbSteps, localMaxSpace,
+			localBestSpaceHaltingMachine.ToAsciiTable(nbStates))))
+	}
 
 	MaxNbSteps = MaxI(localMaxNbSteps, MaxNbSteps)
 	MaxSpace = MaxI(localMaxSpace, MaxSpace)

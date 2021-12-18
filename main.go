@@ -8,10 +8,8 @@ import (
 	"strings"
 	"time"
 
-	uuid "github.com/nu7hatch/gouuid"
-
 	bbc "github.com/bbchallenge/bbchallenge/lib_bbchallenge"
-
+	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
 )
@@ -42,17 +40,24 @@ func initAppendFile(logFileName string) *os.File {
 	return logFile
 }
 
+var dunnoTimeFile *os.File
+var dunnoSpaceFile *os.File
+var bbRecordFile *os.File
+
 func initLogger(runName string) {
 
 	mainLogFileName := runName + ".txt"
 	log.SetFormatter(new(BBChallengeFormatter))
 	log.SetOutput(initAppendFile(mainLogFileName))
 
-	dunnoTimeLogFileName := runName + "_dunno_time"
+	dunnoTimeLogFileName := runName + "_dunno_time" // binary file
 	bbc.DunnoTimeLog = initAppendFile(dunnoTimeLogFileName)
 
-	dunnoSpaceLogFileName := runName + "_dunno_space"
+	dunnoSpaceLogFileName := runName + "_dunno_space" // binary file
 	bbc.DunnoSpaceLog = initAppendFile(dunnoSpaceLogFileName)
+
+	bbRecordLogFileName := runName + "_bb_records.txt"
+	bbc.BBRecordLog = initAppendFile(bbRecordLogFileName)
 }
 
 func main() {
@@ -111,4 +116,8 @@ func main() {
 
 	log.Info("Max # of simultaneous Go routines during search: ", bbc.MaxNbGoRoutines)
 	log.StandardLogger().Writer().Close()
+
+	dunnoTimeFile.Close()
+	dunnoSpaceFile.Close()
+	bbRecordFile.Close()
 }
