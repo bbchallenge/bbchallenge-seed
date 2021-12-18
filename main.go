@@ -66,7 +66,7 @@ func main() {
 
 	arg_nbStates := flag.Int("n", 4, "# of states")
 	arg_backend := flag.Int("b", 0, "simulation backend (0 for go, 1 for C)")
-	arg_verb := flag.Bool("v", false, "displays infos about the run every 5m on stdout")
+	arg_verb := flag.Bool("v", false, "displays infos about the current run on stdout")
 	arg_verb_freq := flag.Int("vf", 30, "seconds between each stdout log in verbose mode")
 
 	arg_limit_time := flag.Int("tlim", bbc.BB5, "time limit after which running machines are killed and marked as 'DUNNO_TIME' (known values of Busy Beaver are also used for early termination)")
