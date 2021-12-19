@@ -225,11 +225,11 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	NbDunnoTime += localNbDunnoTime
 	NbDunnoSpace += localNbDunnoSpace
 
-	if localMaxNbSteps > MaxNbSteps {
+	if localMaxNbSteps >= MaxNbSteps {
 		BBRecordLog.Write([]byte(fmt.Sprintf("*TIME %d SPACE %d\n%s\n",
 			localMaxNbSteps, localMaxSpace,
 			localBestTimeHaltingMachine.ToAsciiTable(nbStates))))
-	} else if localMaxSpace > MaxSpace {
+	} else if localMaxSpace >= MaxSpace {
 		BBRecordLog.Write([]byte(fmt.Sprintf("TIME %d *SPACE %d\n%s\n",
 			localMaxNbSteps, localMaxSpace,
 			localBestSpaceHaltingMachine.ToAsciiTable(nbStates))))
