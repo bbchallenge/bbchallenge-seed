@@ -1,5 +1,7 @@
 bbchallenge
 out.txt
+.DS_Store
+lib_bbchallenge/test-atomic
 
 # Go
 # Binaries for programs and plugins

@@ -3,12 +3,12 @@ package main
 import (
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"strings"
 	"time"
 
 	bbc "github.com/bbchallenge/bbchallenge/lib_bbchallenge"
+	bbchallenge "github.com/bbchallenge/bbchallenge/lib_bbchallenge"
 	uuid "github.com/nu7hatch/gouuid"
 	"github.com/sirupsen/logrus"
 	log "github.com/sirupsen/logrus"
@@ -34,12 +34,6 @@ func getRunName() string {
 	return "run-" + split[len(split)-1]
 }
 
-func initAppendFile(logFileName string) *os.File {
-	ioutil.WriteFile("output/"+logFileName, []byte(""), 0644)
-	logFile, _ := os.OpenFile("output/"+logFileName, os.O_APPEND|os.O_WRONLY, 0644)
-	return logFile
-}
-
 var dunnoTimeFile *os.File
 var dunnoSpaceFile *os.File
 var bbRecordFile *os.File
@@ -48,16 +42,16 @@ func initLogger(runName string) {
 
 	mainLogFileName := runName + ".txt"
 	log.SetFormatter(new(BBChallengeFormatter))
-	log.SetOutput(initAppendFile(mainLogFileName))
+	log.SetOutput(bbchallenge.InitAppendFile(mainLogFileName, "output/"))
 
 	dunnoTimeLogFileName := runName + "_dunno_time" // binary file
-	bbc.DunnoTimeLog = initAppendFile(dunnoTimeLogFileName)
+	bbc.DunnoTimeLog = bbchallenge.InitAppendFile(dunnoTimeLogFileName, "output/")
 
 	dunnoSpaceLogFileName := runName + "_dunno_space" // binary file
-	bbc.DunnoSpaceLog = initAppendFile(dunnoSpaceLogFileName)
+	bbc.DunnoSpaceLog = bbchallenge.InitAppendFile(dunnoSpaceLogFileName, "output/")
 
 	bbRecordLogFileName := runName + "_bb_records.txt"
-	bbc.BBRecordLog = initAppendFile(bbRecordLogFileName)
+	bbc.BBRecordLog = bbchallenge.InitAppendFile(bbRecordLogFileName, "output/")
 }
 
 func main() {
