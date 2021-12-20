@@ -1,7 +1,6 @@
 package bbchallenge
 
 import (
-	"fmt"
 	"os"
 	"sync"
 	"testing"
@@ -10,8 +9,6 @@ import (
 // Here we want to test if file appends of 30 bytes are atomic or not
 func TestAppendAtomic(t *testing.T) {
 	testFile := InitAppendFile("test-atomic", "")
-
-	fmt.Print(testFile)
 
 	var tms [2]TM = [2]TM{
 		TM{'A', 'A', 'A', 'A', 'A', 'A',
@@ -44,7 +41,15 @@ func TestAppendAtomic(t *testing.T) {
 	}
 
 	var buffer [30]byte
-	testFile.Read(buffer[:])
+	err = nil
+	for err == nil {
+		_, err = testFile.Read(buffer[:])
+		for i := 0; i < 30; i += 1 {
+			if buffer[i] != buffer[0] {
+				t.Fail()
+			}
+		}
+	}
 
-	fmt.Println(buffer)
+	os.Remove("test-atomic")
 }
