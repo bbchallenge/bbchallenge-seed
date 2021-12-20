@@ -132,11 +132,11 @@ func main() {
 
 	log.Info("Run time: ", time.Since(bbc.TimeStart), "\n")
 	log.Info(fmt.Sprintf("Number of %d-state machines seen: %d", nbStates, bbc.NbMachineSeen))
-	log.Info(fmt.Sprintf("Number of %d-state machines pruned: %d", nbStates, bbc.NbMachinePruned))
-	log.Info(fmt.Sprintf("Number of halting machines: %d", bbc.NbHaltingMachines))
-	log.Info(fmt.Sprintf("Number of non-halting machines: %d", bbc.NbNonHaltingMachines))
-	log.Info(fmt.Sprintf("Number of dunno-time machines: %d", bbc.NbDunnoTime))
-	log.Info(fmt.Sprintf("Number of dunno-spqce machines: %d\n", bbc.NbDunnoSpace))
+	log.Info(fmt.Sprintf("Number of %d-state machines pruned: %d (%.2f)", nbStates, bbc.NbMachinePruned, float64(bbc.NbMachinePruned)/float64(bbc.NbMachineSeen)))
+	log.Info(fmt.Sprintf("Number of halting machines: %d (%.2f)", bbc.NbHaltingMachines, float64(bbc.NbHaltingMachines)/float64(bbc.NbMachineSeen)))
+	log.Info(fmt.Sprintf("Number of non-halting machines: %d (%.2f)", bbc.NbNonHaltingMachines, float64(bbc.NbNonHaltingMachines)/float64(bbc.NbMachineSeen)))
+	log.Info(fmt.Sprintf("Number of dunno-time machines: %d (%.2f)", bbc.NbDunnoTime, float64(bbc.NbDunnoTime)/float64(bbc.NbMachineSeen)))
+	log.Info(fmt.Sprintf("Number of dunno-space machines: %d (%.2f)\n", bbc.NbDunnoSpace, float64(bbc.NbDunnoSpace)/float64(bbc.NbMachineSeen)))
 
 	log.Info(fmt.Sprintf("BB%d estimate: %d", nbStates, bbc.MaxNbSteps))
 	log.Info(fmt.Sprintf("BB%d_SPACE estimate: %d\n", nbStates, bbc.MaxSpace))
