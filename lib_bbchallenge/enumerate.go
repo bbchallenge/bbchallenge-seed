@@ -20,9 +20,9 @@ const (
 
 var TimeStart time.Time = time.Now()
 
-var DunnoTimeLog io.Writer  // Logging DUNNO_TIME machines
-var DunnoSpaceLog io.Writer // Logging DUNNO_SPACE machines
-var BBRecordLog io.Writer   // Logging BB and BB_space record holders
+var UndecidedTimeLog io.Writer  // Logging UNDECIDED_TIME machines
+var UndecidedSpaceLog io.Writer // Logging UNDECIDED_SPACE machines
+var BBRecordLog io.Writer       // Logging BB and BB_space record holders
 
 var Verbose bool
 var LogFreq int64 = 30000000000 // 30 sec in ns
@@ -47,8 +47,8 @@ var NbMachineSeen int
 var NbMachinePruned int
 var NbHaltingMachines int
 var NbNonHaltingMachines int
-var NbDunnoTime int
-var NbDunnoSpace int
+var NbUndecidedTime int
+var NbUndecidedSpace int
 var MaxNbSteps int
 var MaxSpace int
 var MaxNbGoRoutines int
@@ -108,8 +108,8 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	var localNbMachinePruned int
 	var localNbHalt int
 	var localNbNoHalt int
-	var localNbDunnoTime int
-	var localNbDunnoSpace int
+	var localNbUndecidedTime int
+	var localNbUndecidedSpace int
 	var localMaxNbSteps int
 	var localBestTimeHaltingMachine TM
 	var localBestSpaceHaltingMachine TM
@@ -200,14 +200,14 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 					localNbNoHalt += 1
 					break
 
-				case DUNNO_TIME:
-					localNbDunnoTime += 1
-					DunnoTimeLog.Write(tm[:])
+				case UNDECIDED_TIME:
+					localNbUndecidedTime += 1
+					UndecidedTimeLog.Write(newTm[:])
 					break
 
-				case DUNNO_SPACE:
-					localNbDunnoSpace += 1
-					DunnoSpaceLog.Write(tm[:])
+				case UNDECIDED_SPACE:
+					localNbUndecidedSpace += 1
+					UndecidedSpaceLog.Write(newTm[:])
 					break
 				}
 			}
@@ -222,8 +222,8 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	NbMachinePruned += localNbMachinePruned
 	NbHaltingMachines += localNbHalt
 	NbNonHaltingMachines += localNbNoHalt
-	NbDunnoTime += localNbDunnoTime
-	NbDunnoSpace += localNbDunnoSpace
+	NbUndecidedTime += localNbUndecidedTime
+	NbUndecidedSpace += localNbUndecidedSpace
 
 	if localMaxNbSteps >= MaxNbSteps {
 		BBRecordLog.Write([]byte(fmt.Sprintf("*TIME %d SPACE %d\n%s\n",
@@ -242,14 +242,14 @@ func Enumerate(nbStates byte, tm TM, state byte, read byte,
 	if Verbose && (!notFirstLog || time.Since(lastLogTime) >= time.Duration(LogFreq)) {
 		notFirstLog = true
 		lastLogTime = time.Now()
-		fmt.Printf("run time: %s\ntotal: %d\npruned: %d (%.2f)\nhalt: %d (%.2f)\nnon halt: %d (%.2f)\ndunno time: %d (%.2f)\n"+
-			"dunno space: %d (%.2f)\nbb est.: %d\nbb space est.: %d\nrun/sec: %f\nmax go routines: %d\n\n",
+		fmt.Printf("run time: %s\ntotal: %d\npruned: %d (%.2f)\nhalt: %d (%.2f)\nnon halt: %d (%.2f)\nundecided time: %d (%.2f)\n"+
+			"undecided space: %d (%.2f)\nbb est.: %d\nbb space est.: %d\nrun/sec: %f\nmax go routines: %d\n\n",
 			time.Since(TimeStart), NbMachineSeen,
 			NbMachinePruned, float64(NbMachinePruned)/float64(NbMachineSeen),
 			NbHaltingMachines, float64(NbHaltingMachines)/float64(NbMachineSeen),
 			NbNonHaltingMachines, float64(NbNonHaltingMachines)/float64(NbMachineSeen),
-			NbDunnoTime, float64(NbDunnoTime)/float64(NbMachineSeen),
-			NbDunnoSpace, float64(NbDunnoSpace)/float64(NbMachineSeen),
+			NbUndecidedTime, float64(NbUndecidedTime)/float64(NbMachineSeen),
+			NbUndecidedSpace, float64(NbUndecidedSpace)/float64(NbMachineSeen),
 			MaxNbSteps, MaxSpace, float64(NbMachineSeen)/time.Since(TimeStart).Seconds(),
 			MaxNbGoRoutines)
 

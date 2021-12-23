@@ -27,8 +27,8 @@ type HaltStatus byte
 const (
 	HALT HaltStatus = iota
 	NO_HALT
-	DUNNO_TIME
-	DUNNO_SPACE
+	UNDECIDED_TIME
+	UNDECIDED_SPACE
 )
 
 func MaxI(a int, b int) int {
@@ -144,11 +144,11 @@ func simulate(tm TM, limitTime int, limitSpace int) (HaltStatus, byte, byte, int
 		}
 
 		if nbStateSeen == 5 && steps_count > limitTime {
-			return DUNNO_TIME, 0, 0, steps_count, max_pos - min_pos + 1
+			return UNDECIDED_TIME, 0, 0, steps_count, max_pos - min_pos + 1
 		}
 
 		if nbStateSeen == 5 && max_pos-min_pos+1 > limitSpace {
-			return DUNNO_SPACE, 0, 0, steps_count, max_pos - min_pos + 1
+			return UNDECIDED_SPACE, 0, 0, steps_count, max_pos - min_pos + 1
 		}
 
 		min_pos = MinI(min_pos, curr_head)
@@ -172,14 +172,14 @@ func simulate(tm TM, limitTime int, limitSpace int) (HaltStatus, byte, byte, int
 		if move == R {
 			curr_head += 1
 			if curr_head == MAX_MEMORY {
-				return DUNNO_SPACE, 0, 0,
+				return UNDECIDED_SPACE, 0, 0,
 					steps_count, max_pos - min_pos + 1
 			}
 
 		} else {
 			curr_head -= 1
 			if curr_head == -1 {
-				return DUNNO_SPACE, 0, 0,
+				return UNDECIDED_SPACE, 0, 0,
 					steps_count, max_pos - min_pos + 1
 			}
 		}

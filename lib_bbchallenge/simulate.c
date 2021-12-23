@@ -28,8 +28,8 @@ typedef unsigned char BYTE;
 
 const BYTE HALT = 0;
 const BYTE NO_HALT = 1;
-const BYTE DUNNO_TIME = 2;
-const BYTE DUNNO_SPACE = 3;
+const BYTE UNDECIDED_TIME = 2;
+const BYTE UNDECIDED_SPACE = 3;
 
 BYTE simulate(BYTE* tm,
               int limit_time,
@@ -67,11 +67,11 @@ BYTE simulate(BYTE* tm,
     }
 
     if (nbStateSeen == 5 && steps_count > limit_time) {
-      RETURN(DUNNO_TIME, 0, 0, steps_count, max_pos - min_pos + 1)
+      RETURN(UNDECIDED_TIME, 0, 0, steps_count, max_pos - min_pos + 1)
     }
 
     if (nbStateSeen == 5 && max_pos - min_pos + 1 > limit_space) {
-      RETURN(DUNNO_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
+      RETURN(UNDECIDED_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
     }
 
     if (curr_head < min_pos) {
@@ -99,12 +99,12 @@ BYTE simulate(BYTE* tm,
     if (move == R) {
       curr_head += 1;
       if (curr_head == MAX_MEMORY) {
-        RETURN(DUNNO_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
+        RETURN(UNDECIDED_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
       }
     } else {
       curr_head -= 1;
       if (curr_head == -1) {
-        RETURN(DUNNO_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
+        RETURN(UNDECIDED_SPACE, 0, 0, steps_count, max_pos - min_pos + 1)
       }
     }
 

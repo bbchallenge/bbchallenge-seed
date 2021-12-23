@@ -34,8 +34,8 @@ func getRunName() string {
 	return "run-" + split[len(split)-1]
 }
 
-var dunnoTimeFile *os.File
-var dunnoSpaceFile *os.File
+var undecidedTimeFile *os.File
+var undecidedSpaceFile *os.File
 var bbRecordFile *os.File
 
 func initLogger(runName string) {
@@ -44,11 +44,11 @@ func initLogger(runName string) {
 	log.SetFormatter(new(BBChallengeFormatter))
 	log.SetOutput(bbchallenge.InitAppendFile(mainLogFileName, "output/"))
 
-	dunnoTimeLogFileName := runName + "_dunno_time" // binary file
-	bbc.DunnoTimeLog = bbchallenge.InitAppendFile(dunnoTimeLogFileName, "output/")
+	undecidedTimeLogFileName := runName + "_undecided_time" // binary file
+	bbc.UndecidedTimeLog = bbchallenge.InitAppendFile(undecidedTimeLogFileName, "output/")
 
-	dunnoSpaceLogFileName := runName + "_dunno_space" // binary file
-	bbc.DunnoSpaceLog = bbchallenge.InitAppendFile(dunnoSpaceLogFileName, "output/")
+	undecidedSpaceLogFileName := runName + "_undecided_space" // binary file
+	bbc.UndecidedSpaceLog = bbchallenge.InitAppendFile(undecidedSpaceLogFileName, "output/")
 
 	bbRecordLogFileName := runName + "_bb_records.txt"
 	bbc.BBRecordLog = bbchallenge.InitAppendFile(bbRecordLogFileName, "output/")
@@ -63,8 +63,8 @@ func main() {
 	arg_verb := flag.Bool("v", false, "displays infos about the current run on stdout")
 	arg_verb_freq := flag.Int("vf", 30, "seconds between each stdout log in verbose mode")
 
-	arg_limit_time := flag.Int("tlim", bbc.BB5, "time limit after which running machines are killed and marked as 'DUNNO_TIME' (known values of Busy Beaver are also used for early termination)")
-	arg_limit_space := flag.Int("slim", bbc.BB5_SPACE, "space limit after which machines are killed and marked as 'DUNNO_SPACE' (known values of Busy Beaver space are also used for early termination)")
+	arg_limit_time := flag.Int("tlim", bbc.BB5, "time limit after which running machines are killed and marked as 'UNDECIDED_TIME' (known values of Busy Beaver are also used for early termination)")
+	arg_limit_space := flag.Int("slim", bbc.BB5_SPACE, "space limit after which machines are killed and marked as 'UNDECIDED_SPACE' (known values of Busy Beaver space are also used for early termination)")
 
 	arg_task_divisor := flag.Int("divtask", 1, "divides the size of the job by 1, 2, 4 or 8")
 
@@ -135,8 +135,8 @@ func main() {
 	log.Info(fmt.Sprintf("Number of %d-state machines pruned: %d (%.2f)", nbStates, bbc.NbMachinePruned, float64(bbc.NbMachinePruned)/float64(bbc.NbMachineSeen)))
 	log.Info(fmt.Sprintf("Number of halting machines: %d (%.2f)", bbc.NbHaltingMachines, float64(bbc.NbHaltingMachines)/float64(bbc.NbMachineSeen)))
 	log.Info(fmt.Sprintf("Number of non-halting machines: %d (%.2f)", bbc.NbNonHaltingMachines, float64(bbc.NbNonHaltingMachines)/float64(bbc.NbMachineSeen)))
-	log.Info(fmt.Sprintf("Number of dunno-time machines: %d (%.2f)", bbc.NbDunnoTime, float64(bbc.NbDunnoTime)/float64(bbc.NbMachineSeen)))
-	log.Info(fmt.Sprintf("Number of dunno-space machines: %d (%.2f)\n", bbc.NbDunnoSpace, float64(bbc.NbDunnoSpace)/float64(bbc.NbMachineSeen)))
+	log.Info(fmt.Sprintf("Number of undecided-time machines: %d (%.2f)", bbc.NbUndecidedTime, float64(bbc.NbUndecidedTime)/float64(bbc.NbMachineSeen)))
+	log.Info(fmt.Sprintf("Number of undecided-space machines: %d (%.2f)\n", bbc.NbUndecidedSpace, float64(bbc.NbUndecidedSpace)/float64(bbc.NbMachineSeen)))
 
 	log.Info(fmt.Sprintf("BB%d estimate: %d", nbStates, bbc.MaxNbSteps))
 	log.Info(fmt.Sprintf("BB%d_SPACE estimate: %d\n", nbStates, bbc.MaxSpace))
@@ -144,7 +144,7 @@ func main() {
 	log.Info("Max # of simultaneous Go routines during search: ", bbc.MaxNbGoRoutines)
 	log.StandardLogger().Writer().Close()
 
-	dunnoTimeFile.Close()
-	dunnoSpaceFile.Close()
+	undecidedTimeFile.Close()
+	undecidedSpaceFile.Close()
 	bbRecordFile.Close()
 }
