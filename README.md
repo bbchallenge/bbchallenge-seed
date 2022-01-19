@@ -26,7 +26,7 @@ All these undecided machines are available here: [https://dna.hamilton.ie/tsteri
 +---+-----+-----+
 ```
 
-Is encoded by the 30 bytes:
+Is encoded by the following 30 bytes:
 
 ```
 1, R, 2, 1, L, 3,
