@@ -15,15 +15,15 @@ All these undecided machines are available here: [https://dna.hamilton.ie/tsteri
 - The 30 byte encoding for a 5-state 2-symbol Turing machine can be understood looking at the following example which is the current BB(5) winner:
 
 ```
-  +---+-----+-----+
-	| - |  0  |  1  |
-	+---+-----+-----+
-	| A | 1RB | 1LC |
-	| B | 1RC | 1RB |
-	| C | 1RD | 0LE |
-	| D | 1LA | 1LD |
-	| E | 1RH | 0LA |
-  +---+-----+-----+
++---+-----+-----+
+| - |  0  |  1  |
++---+-----+-----+
+| A | 1RB | 1LC |
+| B | 1RC | 1RB |
+| C | 1RD | 0LE |
+| D | 1LA | 1LD |
+| E | 1RH | 0LA |
++---+-----+-----+
 ```
 
 Is encoded by the 30 bytes:
