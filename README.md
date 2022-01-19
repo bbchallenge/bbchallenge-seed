@@ -4,7 +4,7 @@ This program enumerates all 5-state 2-symbol Turing machines up to isomorphism, 
 
 The program was run in December 2021 and it detected `88,664,064` undecided 5-state 2-symbol machines out of `125,479,953` enumerated machines. A machine was declared to be undecided when it ran for more than `47,176,870` steps (current estimate for BB(5)) or if it visited more than `12,289` memory cells (current estimate for BB_SPACE(5)).
 
-All these undecided machines are available here: 
+All these undecided machines are available at these mirrors: 
 
 - [https://dna.hamilton.ie/tsterin/all_5_states_undecided_machines_with_global_header.zip](https://dna.hamilton.ie/tsterin/all_5_states_undecided_machines_with_global_header.zip)
 - [ipfs://QmRwHRYqL54NnfmketizfgCw4yKDRMN2SnjLbffYSC5qEh](ipfs://QmRwHRYqL54NnfmketizfgCw4yKDRMN2SnjLbffYSC5qEh)
