@@ -3,6 +3,9 @@ out.txt
 .DS_Store
 lib_bbchallenge/test-atomic
 
+all_5_states_undecided_machines_with_global_header*
+write_header
+
 # Go
 # Binaries for programs and plugins
 *.exe
