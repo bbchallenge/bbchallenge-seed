@@ -8,7 +8,7 @@ All these undecided machines are available here: [https://dna.hamilton.ie/tsteri
 
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
-- The first 30 bytes are a header which is currently mainly empty apart from containing three 4-byte int:
+- The first 30 bytes are a header which is currently mainly empty apart from beginning with the three following 4-byte int:
   1. `74,342,035`: The number of machines that are undecided because they exceeded `12,289` memory cells
   2. `14,322,029`: The number of machines that are undecided because they exceeded `47,176,870` steps
   3. `88,664,064`: The total number of machines, which is the sum of the two above numbers
