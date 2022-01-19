@@ -38,7 +38,7 @@ Is encoded by the following successive 30 bytes:
 1, R, 6, 0, L, 1
 ```
 
-With `R = 0` and `L = 1`. Note that states are indexed starting at `A=1` as the state value `0` is used to encoded undefined transitions.
+With `R = 0` and `L = 1`. Note that states are indexed starting at `A=1` as the state value `0` is used to encode undefined transitions.
 
 ### Usage
 
