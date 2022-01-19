@@ -14,7 +14,7 @@ All these undecided machines are available here: [https://dna.hamilton.ie/tsteri
 - Then, each one of the `88,664,064` undecided machines is encoded using 30 bytes. Machines that exceeded the space limit of `12,289` cells come first and then come the machines that exceeded the time limit of `47,176,870` steps.
 - The 30 byte encoding for a 5-state 2-symbol Turing machine can be understood looking at the following example which is the current BB(5) winner:
 
-````
+```
   +---+-----+-----+
 	| - |  0  |  1  |
 	+---+-----+-----+
