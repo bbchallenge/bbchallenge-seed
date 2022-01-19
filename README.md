@@ -8,6 +8,7 @@ All these undecided machines are available here:
 
 - [https://dna.hamilton.ie/tsterin/all_5_states_undecided_machines_with_global_header.zip](https://dna.hamilton.ie/tsterin/all_5_states_undecided_machines_with_global_header.zip)
 - [ipfs://QmRwHRYqL54NnfmketizfgCw4yKDRMN2SnjLbffYSC5qEh](ipfs://QmRwHRYqL54NnfmketizfgCw4yKDRMN2SnjLbffYSC5qEh)
+- [https://ipfs.prgm.dev/ipfs/QmRwHRYqL54NnfmketizfgCw4yKDRMN2SnjLbffYSC5qEh](https://ipfs.prgm.dev/ipfs/QmRwHRYqL54NnfmketizfgCw4yKDRMN2SnjLbffYSC5qEh)
 
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
