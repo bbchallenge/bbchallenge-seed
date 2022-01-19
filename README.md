@@ -28,7 +28,7 @@ Once un-zipped you are left with a 2,28 Go binary file with the following struct
 +---+-----+-----+
 ```
 
-Is encoded by the following 30 bytes:
+Is encoded by the following successive 30 bytes:
 
 ```
 1, R, 2, 1, L, 3,
