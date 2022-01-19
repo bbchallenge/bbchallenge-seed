@@ -59,5 +59,4 @@ Usage of ./bbchallenge:
   -v	displays infos about the current run on stdout
   -vf int
     	seconds between each stdout log in verbose mode (default 30)
-
 ```
