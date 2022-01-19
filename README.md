@@ -42,6 +42,13 @@ With `R = 0` and `L = 1`. Note that states are indexed starting at `A=1` as the 
 
 ### Usage
 
+It is unlikely that you need to run this program yourself as the seed database already has been extracted in December 2021. 
+
+Note that it took 92 computing hours, splitted on 4 computers, to enumerate all 5-state 2-symbol Turing machines up to isomorphism. 
+
+You can find more statistics about this seminal run at this link: [https://docs.google.com/spreadsheets/d/14yrvBjqdGxxzG3KWwywFxpdccwXy5X22S5phCRiZ6Tw/edit?usp=sharing](https://docs.google.com/spreadsheets/d/14yrvBjqdGxxzG3KWwywFxpdccwXy5X22S5phCRiZ6Tw/edit?usp=sharing).
+
+
 ```
 Usage of ./bbchallenge:
   -b int
