@@ -10,6 +10,8 @@ All these undecided machines are available at these mirrors:
 - [ipfs://QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr](ipfs://QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr)
 - [https://ipfs.prgm.dev/ipfs/QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr](https://ipfs.prgm.dev/ipfs/QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr)
 
+Database (.zip) shasum: `8ba107bf1dbd7864865260d3eb8f07580646cb8c`.
+
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
 - The first 30 bytes are a header which is currently mainly empty apart from beginning with the three following 4-byte int:
