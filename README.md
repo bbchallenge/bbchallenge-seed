@@ -18,8 +18,6 @@ Database shasum:
   - all_5_states_undecided_machines_with_global_header.zip: `2576b647185063db2aa3dc2f5622908e99f3cd40`
   - all_5_states_undecided_machines_with_global_header: `e57063afefd900fa629cfefb40731fd083d90b5e`
 
-Database (.zip) shasum: `8ba107bf1dbd7864865260d3eb8f07580646cb8c`.
-
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
 - The first 30 bytes are a header which is currently mainly empty apart from beginning with the three following 4-byte int followed by a 1-byte bool:
