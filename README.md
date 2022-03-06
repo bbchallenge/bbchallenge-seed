@@ -1,5 +1,7 @@
 # BB Challenge Seed
 
+**Update 06/03/22**. To improve the reproducibility of the results we have decided to lexicographically sort the database computed by this program (`all_5_states_undecided_machines_with_global_header`). The first `14,322,029` undecided machines (47M time limit exceeded) were lexicographically sorted independently of the next `74,342,035` undecided machines (12k space limit exceeded). 
+
 This program enumerates all 5-state 2-symbol Turing machines up to isomorphism, according to the technique developed in [http://turbotm.de/~heiner/BB/mabu90.html](http://turbotm.de/~heiner/BB/mabu90.html), in order to seed the database of undecided 5-state 2-symbol Turing machines. Undecided Turing machines are such that it is not known whether they halt or not.
 
 The program was run in December 2021 and it detected `88,664,064` undecided 5-state 2-symbol machines out of `125,479,953` enumerated machines. A machine was declared to be undecided when it ran for more than `47,176,870` steps (current estimate for BB(5)) or if it visited more than `12,289` memory cells (current estimate for BB_SPACE(5)).
@@ -7,15 +9,24 @@ The program was run in December 2021 and it detected `88,664,064` undecided 5-st
 All these undecided machines are available at these mirrors: 
 
 - [https://dna.hamilton.ie/tsterin/all_5_states_undecided_machines_with_global_header.zip](https://dna.hamilton.ie/tsterin/all_5_states_undecided_machines_with_global_header.zip)
-- [ipfs://QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr](ipfs://QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr)
-- [https://ipfs.prgm.dev/ipfs/QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr](https://ipfs.prgm.dev/ipfs/QmPRjcK9mJz4UMwkzLNrVG3YtAUzdRHACuHbmpf1n1bfYr)
+- [ipfs://QmcgucgLRjAQAjU41w6HR7GJbcte3F14gv9oXcf8uZ8aFM](ipfs://QmcgucgLRjAQAjU41w6HR7GJbcte3F14gv9oXcf8uZ8aFM)
+- [https://ipfs.prgm.dev/ipfs/QmcgucgLRjAQAjU41w6HR7GJbcte3F14gv9oXcf8uZ8aFM](https://ipfs.prgm.dev/ipfs/QmcgucgLRjAQAjU41w6HR7GJbcte3F14gv9oXcf8uZ8aFM)
+
+The format of the database is described here: [https://github.com/bbchallenge/bbchallenge-seed](https://github.com/bbchallenge/bbchallenge-seed).
+
+Database shasum: 
+  - `all_5_states_undecided_machines_with_global_header.zip`: `2576b647185063db2aa3dc2f5622908e99f3cd40`.
+  - `all_5_states_undecided_machines_with_global_header`: `e57063afefd900fa629cfefb40731fd083d90b5e`
 
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
-- The first 30 bytes are a header which is currently mainly empty apart from beginning with the three following 4-byte int:
+- The first 30 bytes are a header which is currently mainly empty apart from beginning with the three following 4-byte int followed by a 1-byte bool:
   1. `74,342,035`: The number of machines that are undecided because they exceeded `12,289` memory cells
   2. `14,322,029`: The number of machines that are undecided because they exceeded `47,176,870` steps
   3. `88,664,064`: The total number of machines, which is the sum of the two above numbers
+  4. `1`: the database has been lexicographically sorted. The first `14,322,029` undecided machines (47M time limit exceeded) were lexicographically sorted independently of the next `74,342,035` undecided machines (12k space limit exceeded). 
+
+
 
 - Then, each one of the `88,664,064` undecided machines is successively encoded in the file using 30 bytes each. Machines that exceeded the space limit of `12,289` cells come first and then come the machines that exceeded the time limit of `47,176,870` steps.
 - The 30-byte encoding for a 5-state 2-symbol Turing machine can be understood looking at the following example which is the current BB(5) winner:
