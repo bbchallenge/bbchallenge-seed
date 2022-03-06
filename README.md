@@ -15,8 +15,8 @@ All these undecided machines are available at these mirrors:
 The format of the database is described here: [https://github.com/bbchallenge/bbchallenge-seed](https://github.com/bbchallenge/bbchallenge-seed).
 
 Database shasum: 
-  - all_5_states_undecided_machines_with_global_header.zip: `2576b647185063db2aa3dc2f5622908e99f3cd40`
-  - all_5_states_undecided_machines_with_global_header: `e57063afefd900fa629cfefb40731fd083d90b5e`
+  1. all_5_states_undecided_machines_with_global_header.zip: `2576b647185063db2aa3dc2f5622908e99f3cd40`
+  2. all_5_states_undecided_machines_with_global_header: `e57063afefd900fa629cfefb40731fd083d90b5e`
 
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
