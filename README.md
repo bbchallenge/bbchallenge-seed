@@ -47,7 +47,7 @@ Database shasum:
   1. all_5_states_undecided_machines_with_global_header.zip: `2576b647185063db2aa3dc2f5622908e99f3cd40`
   2. all_5_states_undecided_machines_with_global_header: `e57063afefd900fa629cfefb40731fd083d90b5e`
 
-## Database Format
+### Database Format
 
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
@@ -84,9 +84,9 @@ Is encoded by the following successive 30 bytes:
 
 With `R = 0` and `L = 1`. Note that states are indexed starting at `A=1` as the state value `0` is used to encode undefined transitions.
 
-## Use the database
+### Use the database
 
-### Python
+#### Python
 
 Here are some routines that you will let you interact with the database in Python:
 
