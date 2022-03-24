@@ -57,9 +57,9 @@ Once un-zipped you are left with a 2,28 Go binary file with the following struct
   4. `88,664,064`: The total number of machines, which is the sum of the two above numbers
   5. `1`: the database has been lexicographically sorted. The first `14,322,029` undecided machines (47M time limit exceeded) were lexicographically sorted independently of the next `74,342,035` undecided machines (12k space limit exceeded). 
 
-- Then, each one of the `88,664,064` undecided machines is successively encoded in the file using 30 bytes each. Machines that exceeded the time limit of `47,176,870` steps come first and then come the machines that exceeded the space limit of `12,289` cells.
--  
-- The 30-byte encoding for a 5-state 2-symbol Turing machine can be understood looking at the following example which is the current BB(5) winner:
+Then, each one of the `88,664,064` undecided machines is successively encoded in the file using 30 bytes each. Machines that exceeded the time limit of `47,176,870` steps come first and then come the machines that exceeded the space limit of `12,289` cells.
+
+The 30-byte encoding for a 5-state 2-symbol Turing machine can be understood looking at the following example which is the current BB(5) winner:
 
 ```
 +---+-----+-----+
