@@ -86,9 +86,9 @@ With `R = 0` and `L = 1`. Note that states are indexed starting at `A=1` as the 
 
 ### Use the database
 
-#### Python
+Here are some routines that you will let you interact with the database in different languages:
 
-Here are some routines that you will let you interact with the database in Python:
+#### Python
 
 ```python
 
@@ -105,3 +105,24 @@ def get_machine_i(machine_db_path, i, db_has_header=True):
 
 More at [https://github.com/bbchallenge/bbchallenge-py/](https://github.com/bbchallenge/bbchallenge-py/).
 
+#### Go
+
+```go
+func GetMachineI(db []byte, i int, hasHeader bool) (tm TM, err error) {
+
+	if i < 0 || i > len(db)/30 {
+		err := errors.New("invalid db index")
+		return tm, err
+	}
+
+	offset := 0
+	if hasHeader {
+		offset = 1
+	}
+
+	copy(tm[:], db[30*(i+offset):30*(i+offset+1)])
+	return tm, nil
+}
+```
+
+More at [https://github.com/bbchallenge/bbchallenge-go/](https://github.com/bbchallenge/bbchallenge-go/).
