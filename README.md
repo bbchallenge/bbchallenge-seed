@@ -52,12 +52,13 @@ Database shasum:
 Once un-zipped you are left with a 2,28 Go binary file with the following structure:
 
 - The first 30 bytes are a header which is currently mainly empty apart from beginning with the three following 4-byte int followed by a 1-byte bool:
-  1. `74,342,035`: The number of machines that are undecided because they exceeded `12,289` memory cells
-  2. `14,322,029`: The number of machines that are undecided because they exceeded `47,176,870` steps
-  3. `88,664,064`: The total number of machines, which is the sum of the two above numbers
-  4. `1`: the database has been lexicographically sorted. The first `14,322,029` undecided machines (47M time limit exceeded) were lexicographically sorted independently of the next `74,342,035` undecided machines (12k space limit exceeded). 
+  1. `14,322,029`: The number of machines that are undecided because they exceeded `47,176,870` steps
+  2. `74,342,035`: The number of machines that are undecided because they exceeded `12,289` memory cells
+  4. `88,664,064`: The total number of machines, which is the sum of the two above numbers
+  5. `1`: the database has been lexicographically sorted. The first `14,322,029` undecided machines (47M time limit exceeded) were lexicographically sorted independently of the next `74,342,035` undecided machines (12k space limit exceeded). 
 
-- Then, each one of the `88,664,064` undecided machines is successively encoded in the file using 30 bytes each. Machines that exceeded the space limit of `12,289` cells come first and then come the machines that exceeded the time limit of `47,176,870` steps.
+- Then, each one of the `88,664,064` undecided machines is successively encoded in the file using 30 bytes each. Machines that exceeded the time limit of `47,176,870` steps come first and then come the machines that exceeded the space limit of `12,289` cells.
+-  
 - The 30-byte encoding for a 5-state 2-symbol Turing machine can be understood looking at the following example which is the current BB(5) winner:
 
 ```
