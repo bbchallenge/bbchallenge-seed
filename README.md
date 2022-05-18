@@ -1,4 +1,6 @@
-# BB Challenge Seed
+# bbchallenge's seed database
+
+Please find more context about bbchallenge's seed database at [https://bbchallenge.org/method#seed-database](https://bbchallenge.org/method#seed-database).
 
 **Update 06/03/22**. To improve the reproducibility of the results we have decided to lexicographically sort the database computed by this program (`all_5_states_undecided_machines_with_global_header`). The first `14,322,029` undecided machines (47M time limit exceeded) were lexicographically sorted independently of the next `74,342,035` undecided machines (12k space limit exceeded). 
 
